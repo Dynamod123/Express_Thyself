@@ -1,5 +1,5 @@
 import {ReactElement} from "react";
-import {StageBase, StageResponse, InitialData, Message} from "@chub-ai/stages-ts";
+import {StageBase, StageResponse, InitialData, Message, AspectRatio} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
 
 type MessageStateType = any;
@@ -15,6 +15,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     // Per-message state:
     longTermInstruction: string = '';
     longTermLife: number = 0;
+    imageInstructions: string[] = [];
 
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
@@ -44,12 +45,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     readMessageState(state: MessageStateType) {
         this.longTermInstruction = state?.longTermInstruction ?? '';
         this.longTermLife = state?.longTermLife ?? 0;
+        this.imageInstructions = state?.imageInstructions ?? [];
     }
 
     writeMessageState() {
         return {
             longTermInstruction: this.longTermInstruction,
-            longTermLife: this.longTermLife
+            longTermLife: this.longTermLife,
+            imageInstructions: this.imageInstructions
         }
     }
 
@@ -58,6 +61,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         let newContent = content;
 
         this.longTermLife = Math.max(0, this.longTermLife - 1);
+        this.imageInstructions = [];
 
         const longTermRegex = /\[\[([^\]]*)\]\](?!\()/gm;
         const possibleLongTermInstruction = [...newContent.matchAll(longTermRegex)].map(match => match.slice(1)).join('\n').trim();
@@ -79,19 +83,25 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         }
 
         const currentRegex = /\[([^\]]*)\](?!\()/gm;
-        const currentInstruction = [...newContent.matchAll(currentRegex)].map(match => match.slice(1)).join('\n').trim();
+        let currentInstructions = [...newContent.matchAll(currentRegex)].map(match => match.slice(1)[0]);
         newContent = newContent.replace(currentRegex, "").trim();
+
+        // Image flags:
+        currentInstructions.forEach(instruction => {
+            if (instruction.startsWith("/imagine")) {
+                this.imageInstructions.push(instruction.split("/imagine")[1]);
+            }
+        });
+        currentInstructions = currentInstructions.filter(instruction => !instruction.startsWith("/imagine"));
 
         const stageDirections = 
                 ((this.longTermInstruction.length > 0 && this.longTermLife > 0) ? `Ongoing Instruction: ${this.longTermInstruction}\n` : '') +
-                (currentInstruction.length > 0 ? `Critical Instruction: ${currentInstruction}\n` : '');
+                (currentInstructions.length > 0 ? `Critical Instruction: ${currentInstructions.join('\n').trim()}\n` : '');
 
         // Preserve empty responses that only had instruction.
         if (newContent !== content && newContent.length == 0) {
             newContent = ' ';
         }
-
-        let messageState = this.writeMessageState();
 
         if (stageDirections.length > 0) {
             console.log(`Sending stage directions:\n${stageDirections}`);
@@ -99,7 +109,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         return {
             stageDirections: stageDirections.length > 0 ? stageDirections : null,
-            messageState: messageState,
+            messageState: this.writeMessageState(),
             modifiedMessage: newContent,
             systemMessage: null,
             error: null,
@@ -125,12 +135,36 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             newContent = newContent.replace(longTermRegex, "").trim();
         }
 
-        let messageState = this.writeMessageState();
+        let imageUrls = [];
+        for (let instruction in this.imageInstructions) {
+            console.log(`Generate an image with additional instruction: ${instruction}`);
+            const imageDescription = await this.generator.textGen({
+                prompt: `{{description}}\n\n{{message_history}}\n\n${instruction.trim().length > 0 ? `Additional image context: ${instruction}\n\n` : ''}` +
+                    `Current instruction: Use this response to synthesize a concise visual description of the current narrative moment (with additional image context in mind). ` +
+                    `This will be used to generate an image, so it is beneficial to use tags and keywords to convey details. Style keywords should be based on the character description more than the narration.`,
+                min_tokens: 50,
+                max_tokens: 200
+            });
+            if (imageDescription?.result) {
+                console.log(`Received an image description: ${imageDescription.result}`);
+                const imageResponse = await this.generator.makeImage({
+                    aspect_ratio: AspectRatio.WIDESCREEN_HORIZONTAL,
+                    prompt: imageDescription.result
+                });
+                if (imageResponse?.url) {
+                    imageUrls.push(`![${imageDescription.result}](${imageResponse.url}`); 
+                } else {
+                    console.log('Failed to generate an image.');
+                }
+            } else {
+                console.log('Failed to generate an image description.');
+            }
+        }
 
         return {
             stageDirections: null,
-            messageState: messageState,
-            modifiedMessage: newContent,
+            messageState: this.writeMessageState(),
+            modifiedMessage: (imageUrls.length > 0 ? imageUrls.join('\n\n') : '') + newContent,
             error: null,
             systemMessage: null,
             chatState: null
