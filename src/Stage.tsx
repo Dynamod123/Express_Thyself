@@ -89,7 +89,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         // Image flags:
         currentInstructions.forEach(instruction => {
             if (instruction.startsWith("/imagine")) {
-                console.log(`/imagine detected: ${instruction.split("/imagine")[0]}:${instruction.split("/imagine")[1]}`);
+                console.log(`/imagine detected: ${instruction.split("/imagine")[1].trim()}`);
                 this.imageInstructions.push(instruction.split("/imagine")[1].trim());
             }
         });
@@ -140,9 +140,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         for (let instruction of this.imageInstructions) {
             console.log(`Generate an image with additional instruction: ${instruction}`);
             const imageDescription = await this.generator.textGen({
-                prompt: `Information about {{char}}:\n{{desc}}\n\nNarrative History:\n{{messages}}\n\n${instruction.length > 0 ? `Important Image Details or Context:\n${instruction}\n\n` : ''}` +
-                    `Current instruction:\nUse this response to synthesize a concise visual description of the current narrative moment (with additional image context in mind). ` +
-                    `This will be used to generate an image, so it is beneficial to use tags and keywords to convey details. Style keywords should be based on the character description more than the narration.`,
+                prompt: `Information about {{char}}:\n{{desc}}\n\nNarrative History:\n{{messages}}\n\n${instruction.length > 0 ? `Essential Image Context to Convey:\n${instruction}\n\n` : ''}` +
+                    `Current instruction:\nUse this response to synthesize a concise visual description of the current narrative moment (with essential context in mind). ` +
+                    `This will be used to generate an image, so it is beneficial to use tags and keywords to convey details. Style keywords should be based on the character information more than the narration.`,
                 min_tokens: 50,
                 max_tokens: 100,
                 include_history: true
@@ -166,9 +166,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         return {
             stageDirections: null,
             messageState: this.writeMessageState(),
-            modifiedMessage: (imageUrls.length > 0 ? imageUrls.join('\n\n') : '') + newContent,
+            modifiedMessage: newContent,
             error: null,
-            systemMessage: null,
+            systemMessage: (imageUrls.length > 0 ? imageUrls.join('\n\n') : null),
             chatState: null
         };
     }
