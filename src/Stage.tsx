@@ -181,12 +181,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         for (let instruction of this.imageInstructions) {
             console.log(`Generate an image with additional instruction: ${instruction}`);
             const imageDescription = await this.generator.textGen({
-                prompt: Object.values(this.characters).map(character => `Information about ${character.name}:\n${character.description}`).join(`\n\n`) +
-                    Object.values(this.users).map(user => `Information about ${user.name}:\n${user.chatProfile}`).join(`\n\n`) +
-                    `Information about {{user}}:\n${this.users[promptForId ?? Object.keys(this.users)[0]]}}}\n\n` +
+                prompt: `${Object.values(this.characters).map(character => `Information about ${character.name}:\n${character.personality}`).join(`\n\n`)}\n\n` +
+                    `${Object.values(this.users).map(user => `Information about ${user.name}:\n${user.chatProfile}`).join(`\n\n`)}\n\n` +
                     `Sample responses:\nBob sits across from Jane at a busy cafe. Bob is white, tall, scrawny, short unkempt dark hair, glasses, business casual attire. Jane is tanned, short, curvy, long auburn hair, blouse and slacks.` +
                     `\nGreg rolls his eyes at the viewer, arms crossed. Band tee. Hint of a smirk. Graying short light-brown hair. Brown eyes. Pronounced stuble. Chiseled jaw. Living room backdrop.` +
-                    `\nLisa crosses a busy street, waving excitedly. She has short shorts and a black crop-top. Blue hair in a bob, bright smile, green eyes. Modern, crowded city street setting.` +
+                    `\nLisa crosses a busy street, waving excitedly. She has short shorts and a black crop-top. Blue hair in a bob, bright smile, green eyes. Modern, crowded city street setting.\n\n` +
                     `Narrative History:\n{{messages}}\n\n${instruction.length > 0 ? `Essential Image Context to Convey:\n${instruction}\n\n` : ''}` +
                     `Current instruction:\nUse this response to synthesize a concise visual description of ${instruction.length > 0 ? `the essential image context` : `of the current narrative moment`}. ` +
                     `This response will be fed directly into an image generator, so choose tags and keywords that convey great detail about the setting, action, and scene composition, ` +
