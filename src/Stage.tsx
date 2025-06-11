@@ -9,6 +9,17 @@ type ChatStateType = any;
 
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
+    readonly ASPECT_RATIO_MAPPING: {[key: string]: AspectRatio} = {
+        "Cinematic Horizontal (21:9)": AspectRatio.CINEMATIC_HORIZONTAL,
+        "Widescreen Horizontal (16:9)": AspectRatio.WIDESCREEN_HORIZONTAL,
+        "Photo Horizontal (3:2)": AspectRatio.PHOTO_HORIZONTAL,
+        "Post Horizontal (5:4)": AspectRatio.POST_HORIZONTAL,
+        "SQUARE (1:1)": AspectRatio.SQUARE,
+        "Post Vertical (4:5)": AspectRatio.POST_VERTICAL,
+        "Photo Vertical (2:3)": AspectRatio.PHOTO_VERTICAL,
+        "Widescreen Vertical (9:16)": AspectRatio.WIDESCREEN_VERTICAL,
+        "Cinematic Vertical (9:21)": AspectRatio.CINEMATIC_VERTICAL
+    }
     // Configurable:
     maxLife: number = 10;
     artStyle: string = 'hyperrealistic illustration, dynamic angle, pleasing lighting';
@@ -38,8 +49,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         const {config, messageState} = data;
         this.maxLife = config.maxLife ?? this.maxLife;
         this.artStyle = config.artStyle ?? this.artStyle;
-        console.log(`configuration aspectRatio: ${config.aspectRatio}`);
-        this.aspectRatio = Object.values(AspectRatio).includes(config.aspectRatio as AspectRatio) ? config.aspectRatio as AspectRatio : this.aspectRatio;
+        this.aspectRatio = Object.keys(this.ASPECT_RATIO_MAPPING).includes(config.aspectRatio) ? this.ASPECT_RATIO_MAPPING[config.aspectRatio] : this.aspectRatio;
 
         this.readMessageState(messageState);
     }

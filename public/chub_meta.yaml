@@ -100,26 +100,9 @@ config_schema:
       title: "Aspect Ratio"
       description: "The desired aspect ratio for the generated image."
       type: string
-      default: "WIDESCREEN_HORIZONTAL"
-      anyOf:
-        - title: "Cinematic Horizontal (21:9)"
-          enum: ["CINEMATIC_HORIZONTAL"]
-        - title: "Widescreen Horizontal (16:9)"
-          enum: ["WIDESCREEN_HORIZONTAL"]
-        - title: "Photo Horizontal (3:2)"
-          enum: ["PHOTO_HORIZONTAL"]
-        - title: "Post Horizontal (5:4)"
-          enum: ["POST_HORIZONTAL"]
-        - title: "SQUARE (1:1)"
-          enum: ["SQUARE"]
-        - title: "Post Vertical (4:5)"
-          enum: ["POST_VERTICAL"]
-        - title: "Photo Vertical (2:3)"
-          enum: ["PHOTO_VERTICAL"]
-        - title: "Widescreen Vertical (9:16)"
-          enum: ["WIDESCREEN_VERTICAL"]
-        - title: "Cinematic Vertical (9:21)"
-          enum: ["CINEMATIC_VERTICAL"]
+      default: "Widescreen Horizontal (16:9)"
+      enum: ["Cinematic Horizontal (21:9)", "Widescreen Horizontal (16:9)", "Photo Horizontal (3:2)", "Post Horizontal (5:4)", "SQUARE (1:1)", "Post Vertical (4:5)", "Photo Vertical (2:3)", "Widescreen Vertical (9:16)", "Cinematic Vertical (9:21)"]
+        
 
 
 # The schema of the state that you store.
