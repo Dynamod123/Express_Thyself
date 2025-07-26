@@ -164,7 +164,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     async afterResponse(botMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
 
-        const newContent = this.filterValidMarkdown(botMessage.content);
+        const newContent = await this.filterValidMarkdown(botMessage.content);
 
         /*
         const longTermRegex = /\[\[([^\]]+)\]\](?!\()/gm;
