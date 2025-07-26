@@ -164,11 +164,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
     async afterResponse(botMessage: Message): Promise<Partial<StageResponse<ChatStateType, MessageStateType>>> {
 
-        let newContent = botMessage.content;
-
-        // Strip out markdown that it has attempted to mimic.
-        newContent = newContent.replace(/!\[.*?\]\(.*?\)/g, '');
-        newContent = newContent.replace(/\[.*?\]\(.*?\)/g, '');
+        const newContent = this.filterValidMarkdown(botMessage.content);
 
         /*
         const longTermRegex = /\[\[([^\]]+)\]\](?!\()/gm;
@@ -237,6 +233,32 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             systemMessage: null,
             chatState: null
         };
+    }
+
+    async filterValidMarkdown(text: string): Promise<string> {
+        const matches = [...text.matchAll(/!?\[.*?\]\(.*?\)/g)];
+
+        const validityChecks = await Promise.all(
+            matches.map(match => this.isValidUrl(match[1]))
+        );
+
+        let cleanedText = text;
+        matches.forEach((match, index) => {
+            if (!validityChecks[index]) {
+            cleanedText = cleanedText.replace(match[0], '');
+            }
+        });
+
+        return cleanedText;
+    }
+
+    async isValidUrl(url: string): Promise<boolean> {
+        try {
+            const response = await fetch(url, {method: 'HEAD'});
+            return response.ok;
+        } catch {
+            return false;
+        }
     }
 
     // Replace trigger words with less triggering words, so image gen isn't abetting.
