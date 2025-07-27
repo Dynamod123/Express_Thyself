@@ -12,65 +12,31 @@ which are high-priority instructions that are not directly attributed to the use
 (Please, please ignore the formatting here and come back later...I'm trying to get this more organized but it's a chore rebuilding it as I make minor adjustments.) <br>
 Simply search for and add this stage to your chat from Chat Settings and you'll be able to leverage multiple features within your input:
 
-<style>
-  .toggle-section input[type=\"checkbox\"] {
-                 display: none;
-}
-                 
-                 .toggle-section label {
-                 display: block;
-                 cursor: pointer;
-                 font-weight: bold;
-                 background: #eef;
-                 padding: 6px;
-                 border-radius: 4px;
-                 margin-bottom: 5px;
-}
-                 
-                 .toggle-section .content {
-                 max-height: 0;
-                 overflow: hidden;
-                 transition: max-height 0.3s ease;
-}
-                 
-                 .toggle-section input[type=\"checkbox\"]:checked ~ .content {
-                 max-height: 200px;
-}
-</style>
-<details>
-<summary>
-[Immediate Instruction]
-</summary>
-<p>
-`[Single-Bracketed Immediate Instruction]` will apply the enclosed instruction to the following response (or its regens). 
-</p>
-</details>
-<details>
-<summary>
-[[Long-Term Instruction]]
-</summary>
-<p>
-`[[Double-Bracketed Immediate Instruction]]` will apply the enclosed instruction for multiple responses (10, by default) or until new `[[long-term instruction]]` is provided. 
-</p>
-</details>
-<details>
-<summary>
-[/Imagine Some Context]
-</summary>
-<p>
-`[/imagine Some additional context]` or `[/i Some additional context]` or simply `[/i]` will generate and insert an image into the response.<br>
-Unlike Chub's built-in /imagine, this command queries the LLM to build an image description from chat context--including any supplemental details you provide in the brackets.<br>
-`[[/imagine Some additional context]]` in double brackets will cause the resulting image to be used as a chat background, if backgrounds are not disabled at a profile-level.
-</p>
-</details>
-<details>
-<summary>
-[/Enhance Some Context]
-</summary>
-<p>
-`[/enhance Some action]` or `[/impersonate Some action]` or `[/e Some action]` will generate and insert impersonated prose into your input before the input is submitted to the LLM for a response.
-</p>
-</details>
+<!-- 📄 Immediate Instruction -->
+<div style=\"background: linear-gradient(180deg, #660000, #1e1e1e); color: #f1f1f1; border: 1px solid #555; border-radius: 6px; padding: 10px; margin-bottom: 12px;\">
+                             <strong>📄 [Immediate Instruction]</strong><br><br>
+                             <code>[Single-Bracketed Immediate Instruction]</code> will apply the enclosed instruction to the following response (or its regens).
+  </div>
+  
+  <!-- 📚 Long-Term Instruction -->
+<div style=\"background: linear-gradient(180deg, #444400, #1e1e1e); color: #f1f1f1; border: 1px solid #555; border-radius: 6px; padding: 10px; margin-bottom: 12px;\">
+  <strong>📚 [[Long-Term Instruction]]</strong><br><br>
+  <code>[[Double-Bracketed Immediate Instruction]]</code> will apply the enclosed instruction for multiple responses (10, by default) or until new <code>[[long-term instruction]]</code> is provided.
+  </div>
+  
+  <!-- 🖼️ Imagine Context -->
+<div style=\"background: linear-gradient(180deg, #005511, #1e1e1e); color: #f1f1f1; border: 1px solid #555; border-radius: 6px; padding: 10px; margin-bottom: 12px;\">
+  <strong>🖼️ [/Imagine Some Context]</strong><br><br>
+  <code>[/imagine Some additional context]</code> or <code>[/i Some additional context]</code> or simply <code>[/i]</code> will generate and insert an image into the response.<br>
+  Unlike Chub's built-in /imagine, this command queries the LLM to build an image description from chat context—including any supplemental details you provide in the brackets.<br>
+  <code>[[/imagine Some additional context]]</code> in double brackets will cause the resulting image to be used as a chat background, if backgrounds are not disabled at a profile-level.
+  </div>
+  
+  <!-- 🎭 Enhance Context -->
+<div style=\"background: linear-gradient(180deg, #002244, #1e1e1e); color: #f1f1f1; border: 1px solid #555; border-radius: 6px; padding: 10px; margin-bottom: 12px;\">
+  <strong>🎭 [/Enhance Some Context]</strong><br><br>
+  <code>[/enhance Some action]</code> or <code>[/impersonate Some action]</code> or <code>[/e Some action]</code> will generate and insert impersonated prose into your input before the input is submitted to the LLM for a response.
+  </div>
 <br>
 There are multiple advantages to shifting these instructions into stage directions:
 <ul>
