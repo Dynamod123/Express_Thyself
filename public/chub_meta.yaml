@@ -9,39 +9,40 @@ tagline: "Take control with []s."
 
 creator_notes: "Want to tell the LLM how to do its job? This stage takes your [bracketed instructions] or [[double-bracketed instructions]] and turns them into \"stage directions,\" 
 which are high-priority instructions that are not directly attributed to the user's input. <br>
-Please ignore the formatting here. I'm trying to get this more organized but it's a chore rebuilding it as I make minor adjustments. <br>
+(Please ignore the formatting here and come back later...I'm trying to get this more organized but it's a chore rebuilding it as I make minor adjustments.) <br>
 Simply search for and add this stage to your chat from Chat Settings and you'll be able to leverage multiple features within your input:
+
 <details>
-<summary style=\"cursor: pointer; font-weight: bold; padding: 6px; border-radius: 4px;\">
+<summary>
 [Immediate Instruction]
 </summary>
-<p style=\"margin: 10px 0 0;\">
+<p>
 `[Single-Bracketed Immediate Instruction]` will apply the enclosed instruction to the following response (or its regens). 
 </p>
 </details>
 <details>
-<summary style=\"cursor: pointer; font-weight: bold; padding: 6px; border-radius: 4px;\">
+<summary>
 [[Long-Term Instruction]]
 </summary>
-<p style=\"margin: 10px 0 0;\">
+<p>
 `[[Double-Bracketed Immediate Instruction]]` will apply the enclosed instruction for multiple responses (10, by default) or until new `[[long-term instruction]]` is provided. 
 </p>
 </details>
 <details>
-<summary style=\"cursor: pointer; font-weight: bold; padding: 6px; border-radius: 4px;\">
+<summary>
 [/Imagine Some Context]
 </summary>
-<p style=\"margin: 10px 0 0;\">
+<p>
 `[/imagine Some additional context]` or `[/i Some additional context]` or simply `[/i]` will generate and insert an image into the response.<br>
 Unlike Chub's built-in /imagine, this command queries the LLM to build an image description from chat context--including any supplemental details you provide in the brackets.<br>
 `[[/imagine Some additional context]]` in double brackets will cause the resulting image to be used as a chat background, if backgrounds are not disabled at a profile-level.
 </p>
 </details>
 <details>
-<summary style=\"cursor: pointer; font-weight: bold; padding: 6px; border-radius: 4px;\">
+<summary>
 [/Enhance Some Context]
 </summary>
-<p style=\"margin: 10px 0 0;\">
+<p>
 `[/enhance Some action]` or `[/impersonate Some action]` or `[/e Some action]` will generate and insert impersonated prose into your input before the input is submitted to the LLM for a response.
 </p>
 </details>
