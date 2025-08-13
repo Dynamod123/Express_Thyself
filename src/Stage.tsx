@@ -102,6 +102,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             promptForId,
             content} = userMessage;
         let newContent = content;
+        let isMain = userMessage.isMain;
+
 
         this.longTermLife = Math.max(0, this.longTermLife - 1);
         this.imageInstructions = [];
@@ -232,16 +234,17 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     `Narrative History:{{messages}}\n\n${instruction.length > 0 ? `Essential Image Context to Convey:\n${instruction}\n\n` : ''}` +
                     `${Object.values(this.characters).map(character => `Information about ${character.name}:\n${character.personality}`).join(`\n\n`)}\n\n` +
                     `${Object.values(this.users).map(user => `Information about ${user.name}:\n${user.chatProfile}`).join(`\n\n`)}\n\n` +
+                    `General instruction: {{post_history_instructions}}\n\n` +
+                    `Current priority instruction:\nUse this response to synthesize a concise visual description of ${instruction.length > 0 ? `the essential image context` : `the current narrative moment`}. ` +
+                    `This system response will be fed directly into an image generator, which is unfamiliar with the names or appearance of characters or settings; ` +
+                    `use tags and keywords to convey essential details about the character(s), setting, action, and scene composition, ` +
+                    `presenting ample character appearance notes--particularly if they seem obvious: gender, skin tone, hair style/color, physique, outfit, etc.\n\n` +
                     `Sample responses:\n` +
                     `System: Composition: (A man sits across from a woman at a busy cafe, table in frame)\nMan: (white, tall, scrawny, short unkempt dark hair, glasses, business casual attire, arched eyebrow)\nWoman: (tanned, short, curvy, long auburn hair, blouse, slacks, cute smile)\n` +
                     `System: Composition: (A man stands, arms crossed, in a modern living room, waist-up portrait)\nMan: (band tee, hint of a smirk, rolling eyes, graying short light-brown hair, brown eyes, pronounced stuble, broad shoulders, narrow waist, chiseled jaw)` +
-                    `System: Composition: (A woman crosses a busy, futuristic city street)\nWoman: (waving excitedly, short shorts, black crop-top, blue hair in a bob, bright smile, willowy build, green eyes)\n\n` +
-                    `Current instruction:\nUse this response to synthesize a concise visual description of ${instruction.length > 0 ? `the essential image context` : `of the current narrative moment`}. ` +
-                    `This system response will be fed directly into an image generator, which is unfamiliar with the names or appearance of characters or settings; ` +
-                    `use tags and keywords to convey essential details about the setting, action, and scene composition, ` +
-                    `presenting ample character appearance notes--particularly if they seem obvious: gender, skin tone, hair style/color, physique, outfit, etc.`,
+                    `System: Composition: (A woman crosses a busy, futuristic city street)\nWoman: (waving excitedly, short shorts, black crop-top, blue hair in a bob, bright smile, willowy build, green eyes)\n\n`,
                 min_tokens: 50,
-                max_tokens: 200,
+                max_tokens: 180,
                 include_history: true
             });
             if (imageDescription?.result) {
@@ -312,14 +315,15 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `About {{char}}: ${this.characters[charId].personality}\n${this.characters[charId].description}\n` +
                 `About {{user}}: ${this.users[userId].chatProfile}\n\n` +
                 `[Begin real interaction.]\n{{messages}}` +
-                `Instruction: At the System: prompt, seamlessly continue the narrative as {{user}}` +
+                `General Instruction: {{post_history_instruction}}\n\n` +
+                `Priority Instruction: At the System: prompt, seamlessly continue the narrative as {{user}}, ` +
                 (targetContext.trim() != '' ?
-                    `, focusing on depicting and enhancing the following intent from {{user}}'s perspective: \"${targetContext}\".\n` :
-                    `, focusing on depicting {{user}}'s next dialog or actions from their perspective.\n`) +
+                    `focusing on depicting and enhancing the following intent from {{user}}'s perspective: \"${targetContext}\".\n` :
+                    `focusing on depicting {{user}}'s next dialog or actions from their perspective.\n`) +
                 `Write as though building directly from {{user}}'s input below, taking care to maintain the narrative voice and style {{user}} employs while conveying the target intent with superior detail and suitable impact.\n` +
                 `{{user}}: ${newHistory}`,
             min_tokens: 50,
-            max_tokens: 400,
+            max_tokens: 300,
             include_history: true,
         });
     }
