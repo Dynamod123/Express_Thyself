@@ -259,7 +259,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     imageUrls.push(`![](${imageResponse.url})`);
                     // If at some point stages can control displayed versus context content, I'd like to shift to including the image prompt:
                     //imageUrls.push(`![An image generated from this prompt: ${this.sanitizeMarkdownContent(imagePrompt)}](${imageResponse.url})`);
-                    if (instruction == this.backgroundImageInstruction) {
+                    if (instruction.trim() != '' && instruction == this.backgroundImageInstruction) {
                         this.backgroundUrl = imageResponse.url;
                         await this.messenger.updateEnvironment({background: this.backgroundUrl});
                     }
@@ -314,14 +314,16 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `{{system_prompt}}\n\n` +
                 `About {{char}}: ${this.characters[charId].personality}\n${this.characters[charId].description}\n` +
                 `About {{user}}: ${this.users[userId].chatProfile}\n\n` +
-                `[Begin real interaction.]\n{{messages}}` +
+                `[Begin real interaction.]\n{{messages}}\n` +
+                `{{user}}: ${newHistory}\n\n` +
                 `General Instruction: {{post_history_instruction}}\n\n` +
-                `Priority Instruction: At the System: prompt, seamlessly continue the narrative as {{user}}, ` +
+                `Priority Instruction: Seamlessly continue the narrative as {{user}}, ` +
                 (targetContext.trim() != '' ?
                     `focusing on depicting and enhancing the following intent from {{user}}'s perspective: \"${targetContext}\".\n` :
                     `focusing on depicting {{user}}'s next dialog or actions from their perspective.\n`) +
-                `Write as though building directly from {{user}}'s input below, taking care to maintain the narrative voice and style {{user}} employs while conveying the target intent with superior detail and suitable impact.\n` +
-                `{{user}}: ${newHistory}`,
+                `Write as though building directly from {{user}}'s input, taking care to maintain the narrative voice and style {{user}} employs while conveying the target intent with superior detail and suitable impact.\n\n` +
+                `[Continue real interaction as {{user}}.]`,
+
             min_tokens: 50,
             max_tokens: 300,
             include_history: true,
