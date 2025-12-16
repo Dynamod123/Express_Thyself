@@ -233,7 +233,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             temperature: 0.85,
             top_p: 1,
             repetition_penalty: 1.1,
-        });
+        } as any);
     }
 
     sanitizeMarkdownContent(content: string): string {
