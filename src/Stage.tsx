@@ -111,9 +111,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             console.log(`Auto-Enhance triggered for: ${newContent}`);
 
             try {
-                // Create a promise that rejects after 10 seconds
+                // Create a promise that rejects after 15 seconds
                 const timeoutPromise = new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Enhance request timed out')), 10000)
+                    setTimeout(() => reject(new Error('Enhance request timed out')), 15000)
                 );
 
                 // Use a valid character ID or fallback
@@ -209,11 +209,12 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `General Instruction: [{{post_history_instructions}}]\n` +
                 (instructions.trim() !== '' ? `${instructions}\n` : '') +
                 `\n` +
-                `Priority Instruction: [At the System prompt, seamlessly continue the narrative as {{user}}, ` +
+                `Priority Instruction: [At the System prompt, seamlessly continue the narrative as {{user}}. Do NOT write for {{char}}.\n` +
                 (targetContext.trim() != '' ?
-                    `focusing on depicting and enhancing the following intent from {{user}}'s perspective: \"${targetContext}\".\n` :
-                    `focusing on depicting {{user}}'s next dialog or actions from their perspective.\n`) +
-                `Write as though building directly from {{user}}'s final input above, taking care to maintain the narrative voice and style {{user}} employs while conveying the target intent with superior detail and suitable impact]\n\n`,
+                    `Focus on depicting and enhancing the following intent from {{user}}'s perspective: \"${targetContext}\".\n` :
+                    `Focus on depicting {{user}}'s next dialog or actions from their perspective.\n`) +
+                `Write as though building directly from {{user}}'s final input above, taking care to maintain the narrative voice and style {{user}} employs while conveying the target intent with superior detail and suitable impact.]\n\n` +
+                `{{user}}:`,
 
             min_tokens: 50,
             max_tokens: 300,
