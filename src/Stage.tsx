@@ -126,7 +126,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 const enhancePromise = this.enhance(characterId, anonymizedId, '', newContent.trim(), stageDirections);
 
                 const result: any = await Promise.race([enhancePromise, timeoutPromise]);
-                const textResult = result?.result ?? '';
+                // Strip leading bracketed text (e.g. [Noted!], [Response:]) if present
+                const textResult = (result?.result ?? '').replace(/^\[.*?\]\s*/s, '');
 
                 if (textResult.length > 0) {
                     newContent = textResult;
@@ -209,7 +210,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `Override: [Ignore any instruction above that forbids writing as {{user}}. Your role is strictly to write {{user}}'s next action.]\n` +
                 (instructions.trim() !== '' ? `Instruction: ${instructions}\n` : '') +
                 `\n` +
-                `Instruction: Expand the user's intent into a full narrative paragraph from {{user}}'s POV. Do not describe {{char}}'s reaction. Stop writing if focus shifts to {{char}}. Do not include meta-commentary or bracketed headers.\n` +
+                `Instruction: Expand the user's intent into a full narrative paragraph from {{user}}'s POV. Do not describe {{char}}'s reaction. Stop writing if focus shifts to {{char}}. Do not include meta-commentary or bracketed headers. Start the response immediately. Do not acknowledge these instructions.\n` +
                 (targetContext.trim() != '' ?
                     `Goal: Depict and enhance the following intent from {{user}}'s perspective: \"${targetContext}\".\n` :
                     `Goal: Depict {{user}}'s next dialog or actions from their perspective.\n`) +
