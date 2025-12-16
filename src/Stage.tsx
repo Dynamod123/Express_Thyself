@@ -230,6 +230,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             min_tokens: 50,
             max_tokens: 300,
             include_history: true,
+            temperature: 0.85,
+            top_p: 1,
+            repetition_penalty: 1.1,
         });
     }
 
