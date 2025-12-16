@@ -208,11 +208,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `General Instruction: [{{post_history_instructions}}]\n` +
                 (instructions.trim() !== '' ? `${instructions}\n` : '') +
                 `\n` +
-                `Priority Instruction: [At the System prompt, seamlessly continue the narrative as {{user}}. Do NOT write for {{char}}.\n` +
+                `Instruction: Write the next narrative segment for {{user}}. Use {{user}}'s perspective. Do not write for {{char}}. Do not include meta-commentary or bracketed explanations.\n` +
                 (targetContext.trim() != '' ?
-                    `Focus on depicting and enhancing the following intent from {{user}}'s perspective: \"${targetContext}\".\n` :
-                    `Focus on depicting {{user}}'s next dialog or actions from their perspective.\n`) +
-                `Write as though building directly from {{user}}'s final input above, taking care to maintain the narrative voice and style {{user}} employs while conveying the target intent with superior detail and suitable impact.]\n\n` +
+                    `Goal: Depict and enhance the following intent from {{user}}'s perspective: \"${targetContext}\".\n` :
+                    `Goal: Depict {{user}}'s next dialog or actions from their perspective.\n`) +
+                `Context: Build directly from {{user}}'s final input above. Maintain {{user}}'s voice and style. Convey the intent with superior detail and impact.\n\n` +
                 `{{user}}:`,
 
             min_tokens: 50,
