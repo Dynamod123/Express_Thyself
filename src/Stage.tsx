@@ -205,7 +205,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 `About {{char}}: ${this.characters[charId].personality}\n${this.characters[charId].description}\n` +
                 `About {{user}}: ${this.users[userId].chatProfile}\n\n` +
                 `[Begin real interaction.]\n{{messages}}\n` +
-                `{{user}}: ${newHistory}\n\n` +
                 `General Instruction: [{{post_history_instructions}}]\n` +
                 (instructions.trim() !== '' ? `${instructions}\n` : '') +
                 `\n` +
