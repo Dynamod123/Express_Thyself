@@ -135,6 +135,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                         .replace(/^\s*\[.*?\]\s*/s, '') // Bracketed blocks [ ... ]
                         .replace(/^\s*\{.*?\}\s*/s, '') // Curly brace meta-instructions { ... }
                         .replace(/^\s*\/\w+\s*(\n|$)/gm, '') // Slash commands like /end
+                        .replace(/^\s*\d+\..*?(\n|$)/gm, '') // Numbered lists like "1. Continue from..."
+                        .replace(/^\s*[A-Z]\).*?(\n|$)/gm, '') // Lettered lists like "A) Having him..."
                         .replace(/^\s*(?:Understood|Noted|Sure|Okay|Alright|Error|Terminating|I cannot|System\s*Alert).*?(\n|$)/is, '') // Conversational/Error lines
                         .replace(/^\s*(?:You are|Your task|Your role|You're).*?(?:Mode|perspective|acting as).*?(\n|$)/is, '') // System role descriptions
                         .replace(/^\s*\[?Begin real.*?\]?\s*(\n|$)/is, '') // "Begin real interaction" type lines
