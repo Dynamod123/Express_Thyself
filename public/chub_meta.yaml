@@ -12,6 +12,21 @@ This stage has the primary goal of altering your messages you send out by enhanc
 This Stage is Based on JakeH's 'Boss Mode' Stage. Check out the original mod here: https://chub.ai/extensions/JakeH/boss-mode-cfb0b7d36b1e
 "
 
+# The schema of any user-supplied config.
+config_schema:
+  type: object
+  properties:
+    artStyle:
+      title: ""
+      description: ""
+      type: string
+      default: ""
+    aspectRatio:
+      title: ""
+      description: ""
+      type: string
+      default: ""
+
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
 visibility: 'PUBLIC'
 
