@@ -315,7 +315,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             min_tokens: 50,
             max_tokens: 400,
             include_history: true,
-            repetition_penalty: 1.15,
         });
     }
 
