@@ -130,9 +130,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 }
 
                 // Race the enhance call against the timeout
+                console.log(`[DIAGNOSTIC] Starting enhancement call for character: ${characterId}`);
                 const enhancePromise = this.enhance(characterId, anonymizedId, '', newContent.trim(), stageDirections);
 
                 const result: any = await Promise.race([enhancePromise, timeoutPromise]);
+                console.log(`[DIAGNOSTIC] Enhancement call completed successfully.`);
                 let textResult = result?.result ?? '';
                 console.log(`[DIAGNOSTIC] Raw AI Response:\n${textResult}`);
 
