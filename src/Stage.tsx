@@ -168,6 +168,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                         .replace(/^\s*\[?Begin real.*?\]?\s*(\n|$)/is, '') // "Begin real interaction" type lines
                         .replace(/^\s*(?:About|Context:|Instruction:|Goal:|Background).*?(\n|$)/is, '') // Prompt metadata
                         .replace(/^\s*(?:Warning|Compliance|Correction|Note|System\s*Log):.*?(\n|$)/gm, '') // AI-hallucinated system logs
+                        .replace(/<!--[\s\S]*?-->/g, '') // HTML comments (hallucinated system instructions)
                         .replace(/<output>|<\/output>/gi, '') // Remove tags if they were partial or malformed
                         .trim();
                     if (textResult === original) cleaning = false;
